@@ -81,6 +81,8 @@ const Card: React.FC<CardProps> = ({ card, index, listIndex }) => {
         isOpen={openModalCardDetails}
         setIsOpen={toggleModalCardDetails}
         card={card}
+        listIndex={listIndex}
+        cardIndex={index}
       />
 
       <Container

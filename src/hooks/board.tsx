@@ -28,6 +28,7 @@ interface BoardData {
   lists: TypeList[];
   move: (fromList: number, toList: number, from: number, to: number) => void;
   addCard: (data: AddCardDTO) => void;
+  removeCard: (listIndex: number, cardIndex: number) => void;
 }
 
 const BoardContext = createContext({} as BoardData);
@@ -69,6 +70,14 @@ export const BoardProvider: React.FC = ({ children }) => {
     [],
   );
 
+  const removeCard = useCallback((listIndex: number, cardIndex: number) => {
+    setLists(state =>
+      produce(state, draft => {
+        draft[listIndex].cards.splice(cardIndex, 1);
+      }),
+    );
+  }, []);
+
   const move = useCallback(
     (fromList: number, toList: number, from: number, to: number) => {
       setLists(state =>
@@ -84,7 +93,7 @@ export const BoardProvider: React.FC = ({ children }) => {
   );
 
   return (
-    <BoardContext.Provider value={{ lists, move, addCard }}>
+    <BoardContext.Provider value={{ lists, move, addCard, removeCard }}>
       {children}
     </BoardContext.Provider>
   );

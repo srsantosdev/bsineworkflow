@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { format } from 'date-fns';
+import { MdDelete } from 'react-icons/md';
 
-import { TypeCard } from '../../hooks/board';
+import { TypeCard, useBoard } from '../../hooks/board';
 
 import Modal from '../Modal';
 
@@ -11,14 +12,30 @@ interface ModalProps {
   isOpen: boolean;
   setIsOpen: () => void;
   card: TypeCard;
+  listIndex: number;
+  cardIndex: number;
 }
 
-const CardDetails: React.FC<ModalProps> = ({ isOpen, setIsOpen, card }) => {
+const CardDetails: React.FC<ModalProps> = ({
+  isOpen,
+  setIsOpen,
+  card,
+  listIndex,
+  cardIndex,
+}) => {
+  const { removeCard } = useBoard();
+
   const date = useMemo(() => {
     const formattedDate = format(card.created_at, "dd/MM/yyyy 'às' HH:mm");
 
     return formattedDate;
   }, [card]);
+
+  const handleDeleteCard = useCallback(() => {
+    removeCard(listIndex, cardIndex);
+
+    setIsOpen();
+  }, [removeCard, listIndex, cardIndex, setIsOpen]);
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} width={583}>
@@ -31,9 +48,16 @@ const CardDetails: React.FC<ModalProps> = ({ isOpen, setIsOpen, card }) => {
 
         <p>{card.description}</p>
 
-        <strong>
-          Criado em: <span>{date}</span>
-        </strong>
+        <footer>
+          <strong>
+            Criado em: <span>{date}</span>
+          </strong>
+
+          <button type="button" onClick={handleDeleteCard}>
+            <MdDelete size={14} />
+            Excluir Card
+          </button>
+        </footer>
       </Container>
     </Modal>
   );

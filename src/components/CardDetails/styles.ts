@@ -31,7 +31,34 @@ export const Container = styled.div`
     margin-bottom: 40px;
   }
 
-  > strong {
+  > footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > button {
+      border: 0;
+      background: transparent;
+
+      color: #212529;
+      font-size: 14px;
+
+      display: flex;
+      align-items: center;
+
+      transition: color 0.2s;
+
+      &:hover {
+        color: #e63946;
+      }
+
+      > svg {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  strong {
     font-size: 14px;
 
     span {
