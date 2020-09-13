@@ -1,14 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useDrag, useDrop, DragObjectWithType } from 'react-dnd';
-import { useBoard } from '../../hooks/board';
+
+import { TypeCard, useBoard } from '../../hooks/board';
+import CardDetails from '../CardDetails';
 
 import { Container } from './styles';
 
 interface CardProps {
-  color?: string;
-  title: string;
   index: number;
   listIndex: number;
+  card: TypeCard;
 }
 
 type ItemProps = DragObjectWithType & {
@@ -16,7 +17,7 @@ type ItemProps = DragObjectWithType & {
   listIndex: number;
 };
 
-const Card: React.FC<CardProps> = ({ color, title, index, listIndex }) => {
+const Card: React.FC<CardProps> = ({ card, index, listIndex }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const { move } = useBoard();
@@ -66,12 +67,31 @@ const Card: React.FC<CardProps> = ({ color, title, index, listIndex }) => {
     },
   });
 
+  const [openModalCardDetails, setOpenModalCardDetails] = useState(false);
+
+  const toggleModalCardDetails = useCallback(() => {
+    setOpenModalCardDetails(state => !state);
+  }, []);
+
   dropRef(dragRef(cardRef));
 
   return (
-    <Container ref={cardRef} color={color} isDragging={isDragging}>
-      <h4>{title}</h4>
-    </Container>
+    <>
+      <CardDetails
+        isOpen={openModalCardDetails}
+        setIsOpen={toggleModalCardDetails}
+        card={card}
+      />
+
+      <Container
+        ref={cardRef}
+        color={card.color}
+        isDragging={isDragging}
+        onClick={toggleModalCardDetails}
+      >
+        <h4>{card.title}</h4>
+      </Container>
+    </>
   );
 };
 

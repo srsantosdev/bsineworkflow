@@ -6,9 +6,9 @@ import { useDrop, DragObjectWithType } from 'react-dnd';
 import { TypeList, useBoard } from '../../hooks/board';
 
 import Card from '../Card';
+import CreateCard from '../CreateCard';
 
 import { Container } from './styles';
-import CreateCard from '../CreateCard';
 
 interface ListProps {
   list: TypeList;
@@ -64,9 +64,8 @@ const List: React.FC<ListProps> = ({ list, index: listIndex }) => {
         <ul>
           {list.cards.map((card, index) => (
             <Card
+              card={card}
               key={card.id}
-              color={card.color}
-              title={card.title}
               index={index}
               listIndex={listIndex}
             />

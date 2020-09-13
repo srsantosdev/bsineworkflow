@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { MdCheck } from 'react-icons/md';
 import { useBoard } from '../../hooks/board';
-import Input from '../Input';
 
+import Input from '../Input';
 import Modal from '../Modal';
 
 import { Container } from './styles';
