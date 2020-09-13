@@ -17,7 +17,20 @@ export default createGlobalStyle`
     -webkit-font-smoothing: antialiased;
   }
 
+  body, input, button {
+    font: 400 1.6rem Roboto, sans-serif;
+    color: #212529;
+  }
+
   html, body, #root {
     height: 100vh;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ul {
+    list-style: none;
   }
 `;
