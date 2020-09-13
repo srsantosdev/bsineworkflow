@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 
 import { useDrop, DragObjectWithType } from 'react-dnd';
@@ -8,6 +8,7 @@ import { TypeList, useBoard } from '../../hooks/board';
 import Card from '../Card';
 
 import { Container } from './styles';
+import CreateCard from '../CreateCard';
 
 interface ListProps {
   list: TypeList;
@@ -37,28 +38,42 @@ const List: React.FC<ListProps> = ({ list, index: listIndex }) => {
     },
   });
 
+  const [openModalCreateCard, setOpenModalCreateCard] = useState(false);
+
+  const toggleModalCreateCard = useCallback(() => {
+    setOpenModalCreateCard(state => !state);
+  }, []);
+
   return (
-    <Container ref={dropRef}>
-      <header>
-        <h2>{list.title}</h2>
+    <>
+      <CreateCard
+        isOpen={openModalCreateCard}
+        setIsOpen={toggleModalCreateCard}
+        listIndex={listIndex}
+      />
 
-        <button type="button">
-          <MdAdd size={20} />
-        </button>
-      </header>
+      <Container ref={dropRef}>
+        <header>
+          <h2>{list.title}</h2>
 
-      <ul>
-        {list.cards.map((card, index) => (
-          <Card
-            key={card.id}
-            color={card.color}
-            title={card.title}
-            index={index}
-            listIndex={listIndex}
-          />
-        ))}
-      </ul>
-    </Container>
+          <button type="button" onClick={toggleModalCreateCard}>
+            <MdAdd size={20} />
+          </button>
+        </header>
+
+        <ul>
+          {list.cards.map((card, index) => (
+            <Card
+              key={card.id}
+              color={card.color}
+              title={card.title}
+              index={index}
+              listIndex={listIndex}
+            />
+          ))}
+        </ul>
+      </Container>
+    </>
   );
 };
 

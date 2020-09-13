@@ -6,6 +6,8 @@ export interface TypeCard {
   id: string;
   title: string;
   color?: string;
+  description: string;
+  created_at: Date;
 }
 
 export interface TypeList {
@@ -14,9 +16,18 @@ export interface TypeList {
   cards: Array<TypeCard>;
 }
 
+interface AddCardDTO {
+  listIndex: number;
+  title: string;
+  description: string;
+  color?: string;
+  created_at: Date;
+}
+
 interface BoardData {
   lists: TypeList[];
   move: (fromList: number, toList: number, from: number, to: number) => void;
+  addCard: (data: AddCardDTO) => void;
 }
 
 const BoardContext = createContext({} as BoardData);
@@ -26,27 +37,37 @@ export const BoardProvider: React.FC = ({ children }) => {
     {
       id: uuid(),
       title: 'Planejada',
-      cards: [{ id: uuid(), title: 'Testando isso aqui' }],
+      cards: [],
     },
     {
       id: uuid(),
       title: 'Executando',
-      cards: [
-        { id: uuid(), title: 'Testando isso aqui', color: '#83c5be' },
-        { id: uuid(), title: 'Testando isso aqui' },
-      ],
+      cards: [],
     },
     { id: uuid(), title: 'Impasse', cards: [] },
     {
       id: uuid(),
       title: 'Finalizada',
-      cards: [
-        { id: uuid(), title: 'Testando isso aqui', color: '#283618' },
-        { id: uuid(), title: 'Testando isso aqui' },
-        { id: uuid(), title: 'Testando isso aqui', color: '#deaaff' },
-      ],
+      cards: [],
     },
   ]);
+
+  const addCard = useCallback(
+    ({ title, description, color, created_at, listIndex }: AddCardDTO) => {
+      setLists(state =>
+        produce(state, draft => {
+          draft[listIndex].cards.push({
+            id: uuid(),
+            title,
+            description,
+            created_at,
+            color,
+          });
+        }),
+      );
+    },
+    [],
+  );
 
   const move = useCallback(
     (fromList: number, toList: number, from: number, to: number) => {
@@ -63,7 +84,7 @@ export const BoardProvider: React.FC = ({ children }) => {
   );
 
   return (
-    <BoardContext.Provider value={{ lists, move }}>
+    <BoardContext.Provider value={{ lists, move, addCard }}>
       {children}
     </BoardContext.Provider>
   );
